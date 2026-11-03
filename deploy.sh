@@ -13,3 +13,4 @@ curl -s -X PUT -H "$H" -H 'Content-Type: application/json' "$A/workers/scripts/c
 curl -s -X POST -H "$H" -H 'Content-Type: application/json' "$A/workers/scripts/carnet-chai/subdomain" -d '{"enabled":true,"previews_enabled":false}' >/dev/null
 SUB=$(curl -s -H "$H" "$A/workers/subdomain" | python3 -c "import sys,json;print(json.load(sys.stdin)['result']['subdomain'])")
 echo "URL: https://carnet-chai.$SUB.workers.dev"
+curl -s -o /dev/null -w "test code: %{http_code} (200 attendu)\n" -H "X-Key: $CHAI_PIN" "https://carnet-chai.$SUB.workers.dev/api/backups"
