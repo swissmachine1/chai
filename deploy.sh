@@ -11,6 +11,7 @@ META=$(python3 -c "import json;print(json.dumps({'main_module':'worker.js','comp
 curl -s -X PUT -H "$H" "$A/workers/scripts/carnet-chai" -F "metadata=$META;type=application/json" -F "worker.js=@worker.js;type=application/javascript+module" | python3 -c "import sys,json;r=json.load(sys.stdin);print('deploy',r['success'],r.get('errors'))"
 curl -s -X PUT -H "$H" -H 'Content-Type: application/json' "$A/workers/scripts/carnet-chai/schedules" -d '[{"cron":"0 3 * * *"}]' | python3 -c "import sys,json;print('cron',json.load(sys.stdin)['success'])"
 curl -s -X POST -H "$H" -H 'Content-Type: application/json' "$A/workers/scripts/carnet-chai/subdomain" -d '{"enabled":true,"previews_enabled":false}' >/dev/null
-SUB=$(curl -s -H "$H" "$A/workers/subdomain" | python3 -c "import sys,json;print(json.load(sys.stdin)['result']['subdomain'])")
+SUB=$(curl -s -H "$H" "$A/workers/subdomain" | python3 -c "import sys,json;print((json.load(sys.stdin).get('result') or {}).get('subdomain',''))")
+[ -n "$SUB" ] || { echo "Pas encore de sous-domaine workers.dev : ouvre Workers & Pages une fois sur dash.cloudflare.com, choisis un nom, puis relance."; exit 1; }
 echo "URL: https://carnet-chai.$SUB.workers.dev"
 curl -s -o /dev/null -w "test code: %{http_code} (200 attendu)\n" -H "X-Key: $CHAI_PIN" "https://carnet-chai.$SUB.workers.dev/api/backups"
