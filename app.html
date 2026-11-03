@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carnet de chai</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2c3035">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="icon" href="/icon.svg">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#23262a;--bg2:#2c3035;--line:#3a3f45;--tx:#ece8df;--mu:#a3a8a3;--inox:#c7ccd1;--inox2:#8f979e;--vin:#7b1e3b;--vin2:#a8294f;--blanc:#d9c46a;--blanc2:#f0e2a0;--rose:#d6708a;--rose2:#f2a3b6;--oak:#a06c3b;--oak2:#d19a5c;--chalk:#fff8e7;--todo:#e8b43a;--fs:16px}
+  body.big{--fs:19px;--bg:#141618;--bg2:#1e2124;--line:#4a5058;--tx:#ffffff;--mu:#c9cec9}
+  *{box-sizing:border-box}
+  html{background:var(--bg)}
+  body{margin:0;-webkit-text-size-adjust:100%;font:var(--fs)/1.5 Barlow,-apple-system,sans-serif;color:var(--tx);background:var(--bg)}
+  h1,h2,h3,h4,.zone b,.cuve b,.btn,.mini a,.lab,.tag,.hb{font-family:'Barlow Condensed',Barlow,sans-serif}
+  header{padding:calc(8px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 8px calc(12px + env(safe-area-inset-left));min-height:56px;border-bottom:1px solid var(--line);background:var(--bg2);display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:5}
+  header h1{font-size:24px;font-weight:600;margin:0;flex:1;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  button,a,input,select,textarea{touch-action:manipulation}
+  button{font:inherit;cursor:pointer;color:inherit}
+  .hb{background:none;border:1px solid var(--inox2);border-radius:6px;padding:0 12px;min-height:44px;min-width:44px;color:var(--inox);font-size:17px;position:relative;white-space:nowrap}
+  .hb .n{position:absolute;top:-7px;right:-7px;background:var(--todo);color:#1a1a1a;border-radius:9px;font-size:12px;padding:0 6px;font-weight:600;line-height:18px}
+  .hb.on{background:var(--chalk);color:#1a1a1a;border-color:var(--chalk)}
+  main{padding:16px calc(16px + env(safe-area-inset-right)) calc(80px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));max-width:980px;margin:0 auto}
+  .sub{color:var(--mu);margin:0 0 16px;max-width:60ch}
+  .st{color:var(--mu);font-size:13px}
+  /* plan general */
+  .plan{display:flex;gap:10px;flex-wrap:wrap}
+  .zone{flex:1 1 140px;background:var(--bg2);border:1px solid var(--line);border-top:5px solid var(--inox2);border-radius:4px;padding:12px 10px 10px;text-decoration:none;color:var(--tx);min-height:110px;transition:border-color .15s}
+  .zone:hover,.zone:focus-visible{border-color:var(--inox);outline:none}
+  .zone:active,.cuve:active,.mini a:active,.hb:active,.btn:active{opacity:.7}
+  .zone.b{border-top-color:var(--oak2)}
+  .zone.meb{border-top-color:var(--inox);flex:0 0 100%;max-width:360px;margin:12px auto 0}
+  .zone b{display:block;font-size:22px;font-weight:600;line-height:1.1;margin-bottom:4px}
+  .zone span{display:block;font-size:14px;color:var(--mu)}
+  .zone i{display:block;font-size:15px;margin-top:8px;font-style:normal;color:var(--tx)}
+  .zone i b{display:inline;font:inherit;color:var(--todo)}
+  .jauge{display:flex;height:8px;border-radius:4px;background:var(--bg);margin-top:8px;overflow:hidden}
+  .jauge i{display:block;height:100%;margin:0}
+  .jauge .r{background:var(--vin2)}.jauge .w{background:var(--blanc)}.jauge .p{background:var(--rose)}.jauge .x{background:var(--inox2)}
+  .couloir{border-top:1px dashed var(--inox2);border-bottom:1px dashed var(--inox2);color:var(--mu);text-align:center;padding:8px;margin:12px 0 0;font-size:14px}
+  /* vue d'un chai */
+  .chai{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:14px;position:relative}
+  .cols{display:flex;gap:12px;flex-wrap:wrap}
+  .col{flex:1 1 150px;display:flex;flex-direction:column;gap:9px}
+  .col h4{margin:0 0 2px;font-size:15px;color:var(--mu);font-weight:500;text-align:center}
+  .lab{text-align:center;color:var(--mu);font-size:14px;margin-bottom:8px}
+  .cuve{position:relative;border:0;background:none;padding:0;width:100%;min-height:48px;display:flex;align-items:stretch;gap:8px;text-align:left;border-radius:6px}
+  .cuve:focus-visible{outline:2px solid var(--chalk);outline-offset:3px}
+  .tank{flex:0 0 34px;height:48px;border-radius:6px 6px 3px 3px;background:linear-gradient(90deg,var(--inox2),var(--inox) 45%,var(--inox2));position:relative;overflow:hidden;box-shadow:inset 0 -2px 0 rgba(0,0,0,.35)}
+  .tank i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(90deg,var(--vin),var(--vin2) 50%,var(--vin));transition:height .3s}
+  .tank i.w{background:linear-gradient(90deg,var(--blanc),var(--blanc2) 50%,var(--blanc))}
+  .tank i.p{background:linear-gradient(90deg,var(--rose),var(--rose2) 50%,var(--rose))}
+  .cuve.o .tank{border-radius:12px;background:linear-gradient(90deg,#6e4524,var(--oak) 40%,#6e4524);height:40px;align-self:center}
+  .cuve.o .tank i{background:rgba(0,0,0,.35)}
+  .cuve .inf{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--line);padding-bottom:2px}
+  .cuve b{font-size:19px;font-weight:600;line-height:1.1;color:var(--chalk)}
+  .cuve span{font-size:13px;color:var(--mu)}
+  .cuve .vin{display:block;font-size:14px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cuve .todo{position:absolute;top:4px;right:0;background:var(--todo);color:#1a1a1a;border-radius:9px;font-size:11px;padding:0 6px;font-weight:600;line-height:17px}
+  .mini{display:flex;gap:6px;justify-content:flex-end;margin-bottom:12px;overflow-x:auto}
+  .mini a{border:1px solid var(--line);border-radius:6px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 10px;font-size:16px;color:var(--mu);text-decoration:none}
+  .mini a.on{border-color:var(--inox);color:var(--chalk)}
+  /* tiroir (fiche cuve) */
+  .veil{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9;opacity:0;pointer-events:none;transition:opacity .2s}
+  .veil.open{opacity:1;pointer-events:auto}
+  .sheet{position:fixed;left:0;right:0;bottom:0;z-index:10;max-height:88dvh;overflow:auto;background:var(--bg2);border-top:1px solid var(--line);border-radius:16px 16px 0 0;padding:0 16px calc(24px + env(safe-area-inset-bottom));transform:translateY(102%);transition:transform .25s ease-out;max-width:720px;margin:0 auto}
+  .sheet.open{transform:none}
+  .grip{position:sticky;top:0;background:var(--bg2);padding:10px 0 6px;display:flex;align-items:center;gap:10px;z-index:1}
+  .grip:before{content:"";display:block;width:44px;height:5px;border-radius:3px;background:var(--inox2);margin:0 auto;position:absolute;left:0;right:0;top:6px}
+  .grip h2{margin:14px 0 0;font-size:26px;font-weight:600;flex:1}
+  .grip .hb{margin-top:14px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+  .row label{display:flex;flex-direction:column;font-size:14px;color:var(--mu);flex:1 1 140px;gap:4px}
+  input,select,textarea{font:inherit;font-size:16px;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:5px;width:100%;background:var(--bg);color:var(--tx)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--inox)}
+  textarea{min-height:64px}
+  .btn{background:var(--chalk);color:#1a1a1a;border:0;border-radius:5px;min-height:48px;padding:0 20px;font-weight:600;font-size:18px;width:100%;max-width:320px}
+  .btn.sec{background:none;color:var(--tx);border:1px solid var(--inox2)}
+  .row label .btn{min-height:44px;font-size:16px;padding:0 10px}
+  .calc{font-size:14px;color:var(--todo);min-height:20px;margin:-4px 0 6px}
+  .so2{background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:8px 10px;font-size:15px;margin:10px 0}
+  .so2 b{font-family:'Barlow Condensed';font-size:20px;color:var(--chalk)}
+  details{margin:12px 0;border-top:1px solid var(--line);padding-top:8px}
+  summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:500}
+  .entries{list-style:none;padding:0;margin:14px 0 0}
+  .entries li{display:flex;gap:8px;padding:8px 0;border-top:1px solid var(--line);align-items:center}
+  .entries .d{color:var(--mu);font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .entries .t{flex:1;min-width:0}
+  .entries .tag{font-size:13px;padding:0 6px;border-radius:3px;margin-right:6px;font-weight:600}
+  .tag.op{background:#3b4c66;color:#dbe6f7}.tag.et{background:#4a3f66;color:#e2d9f7}.tag.tp{background:#2f4a5a;color:#cfeeff}.tag.pr{background:#5a4020;color:var(--oak2)}.tag.tr{background:#2f5248;color:#bfe9d8}.tag.td{background:var(--todo);color:#1a1a1a}.tag.td.ok{background:var(--line);color:var(--mu);text-decoration:line-through}
+  .entries .x{background:none;border:0;color:var(--mu);font-size:22px;line-height:1;min-width:44px;min-height:44px;flex:0 0 44px}
+  .entries input[type=checkbox]{width:24px;height:24px;min-height:0;margin:10px;accent-color:var(--todo)}
+  .mic{min-width:44px;min-height:44px;border:1px solid var(--inox2);border-radius:5px;background:none;color:var(--inox);font-size:15px;flex:0 0 auto}
+  .mic.rec{background:var(--vin2);color:#fff;border-color:var(--vin2)}
+  /* aujourd'hui */
+  .jour{list-style:none;padding:0;margin:0}
+  .jour li{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+  .jour li a{color:var(--chalk);text-decoration:none;font-family:'Barlow Condensed';font-size:19px;font-weight:600;min-width:90px}
+  .jour .t{flex:1}
+  .jour input[type=checkbox]{width:26px;height:26px;min-height:0;accent-color:var(--todo)}
+  .saving{position:fixed;bottom:calc(12px + env(safe-area-inset-bottom));right:12px;background:var(--chalk);color:#1a1a1a;padding:6px 12px;border-radius:5px;font-size:13px;display:none;z-index:20}
+  .foot{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media(max-width:600px){.col.c{order:3}.cols{gap:10px}.chai{padding:10px}.cuve b{font-size:17px}.tank{flex-basis:28px;height:44px}.hb{padding:0 9px;font-size:16px}}
+</style>
+</head>
+<body>
+<header><button class="hb" id="back" hidden>← Plan</button><h1 id="title">Carnet de chai</h1><button class="hb" id="btnjour" hidden>À faire</button></header>
+<main id="main"></main>
+<div class="veil" id="veil"></div>
+<div class="sheet" id="sheet"></div>
+<div class="saving" id="saving">Enregistrement…</div>
+
+<script id="state" type="application/json">{}</script>
+<script>
+// ---------- Inventaire fixe (d'apres plan_general_chai.pdf) ----------
+const L=(n,cap,side)=>({n,cap,side});
+const ZONES=[
+ {id:'5',nom:'Chai 5 · barriques',cls:'b',desc:'88 barriques · 28 600 L · extrémité gauche',col:'o',
+  cuves:[L('Mur fond G · 1×500',500,'l'),L('Mur fond · 4×225 (A)',900,'l'),L('Mur fond · 4×225 (B)',900,'r'),L('Mur fond D · 1×500',500,'r'),
+   L('Mur G · 6×225 (1)',1350,'l'),L('Mur G · 6×225 (2)',1350,'l'),L('Mur G · 6×225 (3)',1350,'l'),L('Mur G · 4×225',900,'l'),L('Mur G · 1×500 (a)',500,'l'),L('Mur G · 1×500 (b)',500,'l'),L('Mur G · 5×500',2500,'l'),L('Entrée G · 3×500',1500,'l'),
+   L('Rangée G · 6×500',3000,'c'),L('Rangée D · 6×500',3000,'c'),
+   L('Mur D · 6×225 (1)',1350,'r'),L('Mur D · 6×225 (2)',1350,'r'),L('Mur D · 6×225 (3)',1350,'r'),L('Mur D · 4×225',900,'r'),L('Mur D · 1×500 (a)',500,'r'),L('Mur D · 1×500 (b)',500,'r'),L('Mur D · 6×500',3000,'r'),L('Entrée D · 4×225',900,'r')]},
+ {id:'4',nom:'Chai 4',desc:'24 cuves · 141 600 L',
+  cuves:[...Array.from({length:12},(_,i)=>L('C'+(i+1),7150,'l')),L('C13',7150,'r'),L('Pile 1',1150,'r'),L('Pile 2',1150,'r'),L('Pile 3',1150,'r'),L('Pile 4',1150,'r'),L('Pile 5',1150,'r'),...Array.from({length:6},(_,i)=>L('C'+(i+14),7150,'r'))]},
+ {id:'3',nom:'Chai 3',desc:'12 cuves · 69 250 L',
+  cuves:[...Array.from({length:5},(_,i)=>L('C'+(i+1),5750,'l')),...Array.from({length:4},(_,i)=>L('C'+(i+6),7550,'r')),L('C10',2700,'r'),L('C11',2700,'r'),L('C12',4900,'r')]},
+ {id:'2',nom:'Chai 2',desc:'10 cuves · 110 000 L',
+  cuves:[...Array.from({length:4},(_,i)=>L('C'+(i+1),20000,'l')),...Array.from({length:6},(_,i)=>L('C'+(i+5),5000,'r'))]},
+ {id:'1',nom:'Chai 1',desc:'10 cuves · 140 000 L',
+  cuves:[...Array.from({length:6},(_,i)=>L('C'+(i+1),10000,'l')),...Array.from({length:4},(_,i)=>L('C'+(i+7),20000,'r'))]},
+ {id:'0',nom:'Chai 0',desc:'12 cuves de 25 505 L · 306 060 L · extrémité droite',
+  cuves:[...Array.from({length:6},(_,i)=>L('C'+(i+1),25505,'l')),...Array.from({length:6},(_,i)=>L('C'+(i+7),25505,'r'))]},
+ {id:'meb',nom:'Mise en bouteille',cls:'meb',desc:'17 cuves · 31 382 L · en face des chais',
+  cuves:[L('Pass. G 2 500 (dessus a)',2500,'l'),L('Pass. G 2 500 (dessus b)',2500,'l'),L('Pass. G 1 998 (dessous a)',1998,'l'),L('Pass. G 1 998 (dessous b)',1998,'l'),L('3 300 L',3300,'l'),L('4 400 L (a)',4400,'l'),L('4 400 L (b)',4400,'l'),
+   L('Pass. D 1 166',1166,'r'),L('Pass. D 1 599',1599,'r'),L('Pass. D 1 563',1563,'r'),L('Pass. D 1 158',1158,'r'),L('900 L (a)',900,'r'),L('900 L (b)',900,'r'),L('900 L (c)',900,'r'),L('700 L (a)',700,'r'),L('700 L (b)',700,'r'),L('700 L (c)',700,'r')]}
+];
+const fmt=n=>n.toLocaleString('fr-CH').replace(/ |,/g,' ');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+
+// ---------- Etat : local d'abord (hors ligne), synchro avec le serveur ----------
+// ponytail: dernier enregistrement gagne (ts). Suffit pour 1-2 personnes ; fusion par cuve si conflits reels.
+let state=JSON.parse(document.getElementById('state').textContent||'{}');
+try{const ls=localStorage.getItem('chai-state');if(ls)state=JSON.parse(ls);}catch(e){}
+state.cuves=state.cuves||{};state.ts=state.ts||0;
+const $=id=>document.getElementById(id);
+const main=$('main'),title=$('title'),back=$('back'),savingEl=$('saving'),sheet=$('sheet'),veil=$('veil');
+let pin=localStorage.getItem('chai-pin')||'';
+function askPin(){main.innerHTML='';title.textContent='Carnet de chai';back.hidden=true;const f=document.createElement('div');f.className='so2';f.innerHTML='<h2 style="margin:0">Code du chai</h2><p class="sub">Demande le code à Gus. Il reste enregistré sur ce téléphone.</p><form class="row"><label>Code<input id="pin" inputmode="numeric" autocomplete="off"></label><button class="btn">Entrer</button></form>';
+  main.prepend(f);f.querySelector('form').onsubmit=e=>{e.preventDefault();pin=f.querySelector('#pin').value.trim();localStorage.setItem('chai-pin',pin);f.remove();route();pull();};}
+async function api(method,path,body){const r=await fetch(path,{method,headers:{'X-Key':pin,'Content-Type':'application/json'},body:body&&JSON.stringify(body)});if(r.status===401)throw new Error('401');if(!r.ok)throw new Error(r.status);return r.json();}
+function setStatus(t){document.querySelectorAll('.st').forEach(e=>e.textContent=t);}
+async function pull(){try{const srv=await api('GET','/api/state');if(srv&&srv.ts>state.ts){state=srv;store();route();}setStatus('à jour');}
+  catch(e){setStatus(e.message==='401'?'code faux':'hors ligne');if(e.message==='401'){localStorage.removeItem('chai-pin');pin='';askPin();}}}
+function store(){try{localStorage.setItem('chai-state',JSON.stringify(state));}catch(e){}}
+let timer=null;
+function save(){state.ts=Date.now();store();clearTimeout(timer);timer=setTimeout(push,800);}
+async function push(){savingEl.style.display='block';try{await api('PUT','/api/state',state);setStatus('enregistré');}catch(e){setStatus(e.message==='401'?'code faux':'hors ligne, réessai plus tard');}savingEl.style.display='none';}
+addEventListener('online',()=>{push();});
+const key=(z,c)=>z.id+'|'+c.n;
+const get=(z,c)=>state.cuves[key(z,c)]||{vol:0,vin:'',col:'',entries:[]};
+const set=(z,c,v)=>{state.cuves[key(z,c)]=v;save();};
+const todosOf=(z,c)=>get(z,c).entries.filter(e=>e.type==='td'&&!e.ok).length;
+const nbTodo=()=>ZONES.reduce((a,z)=>a+z.cuves.reduce((b,c)=>b+todosOf(z,c),0),0)+nbRappels();
+
+// ---------- Etats de cuve et rappels automatiques ----------
+const ETATS=[{id:'',l:'—'},{id:'vinif',l:'En cours de vinif'},{id:'malo',l:'Malo à faire',j:10,msg:'contrôler la malo'},{id:'fini',l:'Vin fini'},{id:'vidange',l:'En vidange (sous azote)',j:7,msg:"contrôler l'azote"},{id:'vide',l:'Vide'}];
+const OPS=['Soutirage','Remontage','Délestage','Pigeage','Décuvage','Pressurage','Débourbage','Ouillage','Filtration','Collage','Mise sous azote','Analyse','Dégustation'];
+const etatOf=s=>ETATS.find(e=>e.id===(s.etat||''))||ETATS[0];
+const DAY=86400000;const days=(d)=>Math.floor((Date.now()-new Date(d+'T00:00:00'))/DAY);
+function rappel(z,c){const s=get(z,c);const e=etatOf(s);const n=s.rappel!=null?+s.rappel:(e.j||0);if(!n||!s.etatD)return null;
+  const depuis=days(s.etatD);const dernier=days(s.chk||s.etatD);return{z,c,e,n,depuis,dans:n-dernier,txt:`${c.n} ${e.l.toLowerCase()} depuis ${depuis} j : ${e.msg||'vérifier'}`};}
+function rappels(){const l=[];for(const z of ZONES)for(const c of z.cuves){const r=rappel(z,c);if(r)l.push(r);}return l;}
+const nbRappels=()=>rappels().filter(r=>r.dans<=0).length;
+// ---------- Doses ----------
+// "4 g/hL" -> {q:4,u:'g',per:'hl'} ; total pour V litres
+function parseDose(d){const m=String(d).replace(',','.').match(/([\d.]+)\s*(kg|mg|g|ml|cl|l)\s*(?:\/|par)\s*(hl|l)\b/i);if(!m)return null;return{q:+m[1],u:m[2].toLowerCase(),per:m[3].toLowerCase()};}
+function totalDose(d,vol){const p=parseDose(d);if(!p||!vol)return null;const n=p.q*(p.per==='hl'?vol/100:vol);return{n,u:p.u};}
+const fmtQ=(n,u)=>{if(u==='g'&&n>=1000)return fmt(Math.round(n/100)/10)+' kg';if(u==='ml'&&n>=1000)return fmt(Math.round(n/100)/10)+' L';return fmt(Math.round(n*10)/10)+' '+u;};
+const isSO2=e=>/so\s?[2₂]|soufre|sulfit|bisulf|m[ée]tabisulf/i.test(e.txt+' '+(e.dose||''));
+function so2Total(s){let g=0;for(const e of s.entries){if(e.type!=='pr'||!isSO2(e)||!e.tot)continue;g+=e.tot.u==='g'?e.tot.n:e.tot.u==='kg'?e.tot.n*1000:e.tot.u==='mg'?e.tot.n/1000:0;}return g;}
+
+// ---------- Vues ----------
+let cur=null,sel=null;
+function route(){if(!pin)return;closeSheet();const h=location.hash.replace('#','');$('btnjour').hidden=false;
+  if(h==='jour')return viewJour();const z=ZONES.find(z=>'z-'+z.id===h);z?viewChai(z):viewPlan();window.scrollTo(0,0);}
+addEventListener('hashchange',route);
+back.onclick=()=>{location.hash='';};
+$('btnjour').classList.toggle('on',location.hash==='#jour');$('btnjour').onclick=()=>{location.hash=location.hash==='#jour'?'':'jour';};
+function jourBadge(){$('btnjour').classList.toggle('on',location.hash==='#jour');const n=nbTodo();$('btnjour').innerHTML="À faire"+(n?`<span class="n">${n}</span>`:'');}
+const colCls=c=>c==='blanc'?'w':c==='rosé'?'p':c==='rouge'?'r':'r';
+
+function viewPlan(){
+  cur=null;back.hidden=true;title.textContent='Plan général du chai';jourBadge();
+  const box=z=>{let cap=0,v={r:0,w:0,p:0},td=0;for(const c of z.cuves){const s=get(z,c);cap+=c.cap;td+=todosOf(z,c);const r=rappel(z,c);if(r&&r.dans<=0)td++;if(s.vol)v[colCls(s.col)]+=+s.vol;}
+    const tot=v.r+v.w+v.p;const seg=k=>v[k]?`<i class="${k}" style="width:${100*v[k]/cap}%"></i>`:'';
+    return `<a class="zone ${z.cls||''}" href="#z-${z.id}"><b>${z.nom}</b><span>${z.cuves.length} ${z.id==='5'?'emplacements':'cuves'} · ${fmt(cap)} L</span><div class="jauge">${seg('r')}${seg('w')}${seg('p')}</div><i>${fmt(tot)} L (${Math.round(100*tot/cap)} %)${td?' · <b>'+td+' à faire</b>':''}</i></a>`;};
+  main.innerHTML=`<p class="sub">Chais 5 à 0 de gauche à droite, couloir devant, mise en bouteille en face. Touche un chai pour l'ouvrir. <span class="st"></span></p>
+  <div class="plan">${ZONES.filter(z=>z.id!=='meb').map(box).join('')}</div>
+  <div class="couloir">Couloir le long de tous les chais</div>
+  <div class="plan">${box(ZONES.find(z=>z.id==='meb'))}</div>
+  <div class="foot"><button class="btn sec" id="csv">Exporter en tableau (CSV)</button><button class="btn sec" id="bak">Sauvegardes</button></div><div id="bakl"></div>`;
+  $('csv').onclick=exportCSV;$('bak').onclick=listBackups;
+}
+function viewChai(z,open){
+  cur=z;back.hidden=false;title.textContent=z.nom;jourBadge();
+  const nav=ZONES.map(o=>`<a href="#z-${o.id}" class="${o===z?'on':''}">${o.id==='meb'?'MEB':o.id}</a>`).join('');
+  const tile=c=>{const s=get(z,c);const r=rappel(z,c);const td=todosOf(z,c)+(r&&r.dans<=0?1:0);const et=etatOf(s);const cls=c.side==='c'||z.id==='5'?'o':'';
+    return `<button class="cuve ${cls}" data-n="${esc(c.n)}"><span class="tank"><i class="${colCls(s.col)}" style="height:${Math.min(100,100*(+s.vol||0)/c.cap)}%"></i></span><span class="inf"><b>${esc(c.n)}</b>${s.vin||s.lot?`<span class="vin">${esc(s.vin)}${s.lot?' · '+esc(s.lot):''}</span>`:''}<span>${s.vol?fmt(s.vol)+' / ':''}${fmt(c.cap)} L${et.id?' · '+et.l:''}${s.temp?' · '+esc(s.temp)+' °C':''}</span></span>${td?`<span class="todo">${td}</span>`:''}</button>`;};
+  const col=(side,h)=>{let l=z.cuves.filter(c=>c.side===side);if(side==='l'&&/^[0-4]$/.test(z.id))l=l.slice().reverse();return `<div class="col ${side}"><h4>${h}</h4>${l.map(tile).join('')}</div>`;};
+  main.innerHTML=`<div class="mini">${nav}</div><p class="sub">${z.desc}. Touche une cuve pour voir son journal. <span class="st"></span></p>
+  <div class="chai"><div class="lab">Mur du fond</div><div class="cols">${col('l','Côté gauche')}${z.id==='5'?col('c','Centre'):''}${col('r','Côté droit')}</div><div class="lab" style="margin:10px 0 0">↑ Entrée</div></div>`;
+  main.querySelectorAll('.cuve').forEach(b=>b.onclick=()=>openCuve(z,z.cuves.find(c=>c.n===b.dataset.n)));
+  if(open)openCuve(z,open);
+}
+function viewJour(){
+  cur=null;back.hidden=false;title.textContent='À faire';jourBadge();
+  const items=[];for(const z of ZONES)for(const c of z.cuves){const s=get(z,c);s.entries.forEach((e,i)=>{if(e.type==='td'&&!e.ok)items.push({z,c,e,i,k:'td',d:e.d,dans:days(e.d)*-1});});}
+  for(const r of rappels())items.push({...r,k:'r',d:'',dans:r.dans});
+  items.sort((a,b)=>a.dans-b.dans);
+  const lbl=it=>(it.z.id==='meb'?'MEB':'Chai '+it.z.id)+' · '+esc(it.c.n);
+  const when=it=>it.k==='r'?(it.dans<=0?`<b style="color:var(--todo)">à faire maintenant</b> (tous les ${it.n} j)`:`dans ${it.dans} j (tous les ${it.n} j)`):(it.dans>0?`prévu le ${esc(it.d)}`:it.dans<0?`<b style="color:var(--todo)">en retard de ${-it.dans} j</b>`:`<b style="color:var(--todo)">aujourd'hui</b>`);
+  main.innerHTML=`<p class="sub">Opérations en attente et rappels automatiques des cuves, les plus urgents en premier. Coche quand c'est fait. <span class="st"></span></p>
+  <ul class="jour">${items.map((it,k)=>`<li><input type="checkbox" data-k="${k}"><a href="#z-${it.z.id}" data-k="${k}">${lbl(it)}</a><span class="t">${it.k==='r'?esc(it.txt):esc(it.e.txt)+(it.e.dose?' <b>'+esc(it.e.dose)+'</b>':'')}<br><span style="color:var(--mu);font-size:13px">${when(it)}</span></span></li>`).join('')||'<li><span class="t" style="color:var(--mu)">Rien à faire. Belle journée au chai.</span></li>'}</ul>`;
+  main.querySelectorAll('input[data-k]').forEach(i=>i.onchange=()=>{const it=items[+i.dataset.k];const s=get(it.z,it.c);
+    if(it.k==='r'){const t=new Date().toISOString().slice(0,10);s.chk=t;s.entries.unshift({d:t,type:'op',dose:'',txt:(it.e.msg||'contrôle')+' ('+it.e.l.toLowerCase()+' depuis '+it.depuis+' j)',ok:false});}
+    else s.entries[it.i].ok=true;set(it.z,it.c,s);viewJour();});
+  main.querySelectorAll('a[data-k]').forEach(a=>a.onclick=ev=>{ev.preventDefault();const it=items[+a.dataset.k];location.hash='z-'+it.z.id;setTimeout(()=>openCuve(it.z,it.c),50);});
+}
+
+// ---------- Tiroir : fiche d'une cuve ----------
+function closeSheet(){sheet.classList.remove('open');veil.classList.remove('open');sel=null;}
+veil.onclick=closeSheet;
+let ty=null;sheet.addEventListener('touchstart',e=>{ty=sheet.scrollTop===0?e.touches[0].clientY:null;},{passive:true});
+sheet.addEventListener('touchmove',e=>{if(ty!==null&&e.touches[0].clientY-ty>90){ty=null;closeSheet();}},{passive:true});
+function openCuve(z,c){
+  sel=c;const s=get(z,c);const today=new Date().toISOString().slice(0,10);const so2=so2Total(s);
+  const li=(e,i)=>`<li><span class="d">${esc(e.d)}</span><span class="t"><span class="tag ${e.type}${e.ok?' ok':''}">${{op:'Opération',pr:'Produit',td:'À faire',tr:'Transfert',et:'État',tp:'Température'}[e.type]||e.type}</span>${esc(e.txt)}${e.dose?` <b>${esc(e.dose)}</b>`:''}${e.tot?` <span style="color:var(--todo)">= ${fmtQ(e.tot.n,e.tot.u)}</span>`:''}</span>${e.type==='td'?`<input type="checkbox" ${e.ok?'checked':''} data-ok="${i}">`:''}<button class="x" data-del="${i}" aria-label="Supprimer">×</button></li>`;
+  const others=[];for(const oz of ZONES)for(const oc of oz.cuves)if(!(oz===z&&oc===c))others.push({oz,oc});
+  sheet.innerHTML=`<div class="grip"><h2>${z.nom} · ${esc(c.n)}</h2><button class="hb" id="close" aria-label="Fermer">✕</button></div><div class="sub">Capacité ${fmt(c.cap)} L</div>
+  <div class="row"><label>Volume actuel (L)<input id="vol" type="number" inputmode="numeric" value="${s.vol||''}"></label><label>Contenu (cépage)<input id="vin" value="${esc(s.vin)}"></label></div>
+  <div class="row"><label>Couleur<select id="col"><option value="">—</option>${['rouge','blanc','rosé'].map(k=>`<option ${s.col===k?'selected':''}>${k}</option>`).join('')}</select></label><label>Lot<input id="lot" value="${esc(s.lot||'')}"></label></div>
+  ${(()=>{const r=rappel(z,c);const e=etatOf(s);if(!e.id)return '';return `<div class="so2" ${r&&r.dans<=0?'style="border-color:var(--todo)"':''}>${r&&r.dans<=0?'⚠ ':''}${esc(e.l)}${s.etatD?' depuis <b>'+days(s.etatD)+' j</b>':''}${r?(r.dans<=0?' : '+esc(r.e.msg||'vérifier')+' maintenant':' · prochain rappel dans '+r.dans+' j'):''}</div>`;})()}
+  ${so2?`<div class="so2">SO₂ ajouté au total : <b>${fmtQ(so2,'g')}</b>${s.vol?` soit <b>${(so2/(s.vol/100)).toFixed(1)} g/hL</b> sur ${fmt(s.vol)} L`:''}</div>`:''}
+  <form id="fet"><div class="row"><label>État de la cuve<select id="etat">${ETATS.map(e=>`<option value="${e.id}" ${(s.etat||'')===e.id?'selected':''}>${e.l}</option>`).join('')}</select></label><label>Date<input id="etatD" type="date" value="${today}"></label><label>Rappel tous les (jours, 0 = aucun)<input id="rappel" type="number" inputmode="numeric" min="0" value="${s.rappel!=null?s.rappel:(etatOf(s).j||0)}"></label><label>&nbsp;<button class="btn sec">Enregistrer l'état</button></label></div></form>
+  <form id="fop"><div class="row"><label>Opération<select id="op"><option value="">Choisir…</option>${OPS.map(o=>`<option>${o}</option>`).join('')}</select></label><label>Date<input id="opD" type="date" value="${today}"></label><label>&nbsp;<button class="btn sec">Enregistrer l'opération</button></label></div></form>
+  <form id="fso2"><div class="row"><label>SO₂ (g/hL)<input id="so2d" type="number" inputmode="decimal" step="0.5" min="0" placeholder="4"></label><label>Date<input id="so2D" type="date" value="${today}"></label><label>&nbsp;<button class="btn sec">Ajouter le SO₂</button></label></div><div class="calc" id="calc2"></div></form>
+  <form id="add"><div class="row"><label style="flex-direction:row;align-items:flex-end;gap:8px"><span style="flex:1;display:flex;flex-direction:column;gap:4px">Note libre (une dose écrite « 4 g/hL » est calculée)<textarea id="txt" placeholder="Remontage 10 min, goût propre…"></textarea></span><button type="button" class="mic" id="mic" hidden>🎙 Dicter</button></label></div>
+  <div class="calc" id="calc"></div>
+  <div class="row"><label>Température (°C)<select id="temp"><option value="">—</option>${Array.from({length:61},(_,i)=>(5+i*0.5)).map(t=>`<option>${String(t).replace('.',',')}</option>`).join('')}</select></label><label>Date<input id="d" type="date" value="${today}"></label></div>
+  <button class="btn">Enregistrer la note</button></form>
+  <details><summary>Transférer vers une autre cuve</summary><form id="tr"><div class="row"><label>Vers<select id="dest">${others.map((o,i)=>`<option value="${i}">${o.oz.id==='meb'?'MEB':'Chai '+o.oz.id} · ${esc(o.oc.n)} (${fmt(o.oc.cap)} L${get(o.oz,o.oc).vol?', '+fmt(get(o.oz,o.oc).vol)+' L dedans':''})</option>`).join('')}</select></label><label>Volume (L)<input id="qty" type="number" inputmode="numeric" value="${s.vol||''}"></label></div><button class="btn sec">Transférer</button></form></details>
+  <ul class="entries">${s.entries.map(li).join('')||'<li><span class="t" style="color:var(--mu)">Rien noté. Ajoute la première opération ci-dessus.</span></li>'}</ul>`;
+  sheet.classList.add('open');veil.classList.add('open');sheet.scrollTop=0;
+  const q=id=>sheet.querySelector('#'+id);
+  q('close').onclick=closeSheet;
+  const upd=()=>{s.vol=+q('vol').value||0;s.vin=q('vin').value.trim();s.col=q('col').value;s.lot=q('lot').value.trim();set(z,c,s);viewChai(z,c);};
+  q('vol').onchange=q('vin').onchange=q('col').onchange=q('lot').onchange=upd;
+  q('etat').onchange=()=>{const e=ETATS.find(x=>x.id===q('etat').value);q('rappel').value=e&&e.j?e.j:0;};
+  q('fet').onsubmit=ev=>{ev.preventDefault();const e=ETATS.find(x=>x.id===q('etat').value);if(!e||!e.id)return;const d=q('etatD').value||today;const n=+q('rappel').value||0;
+    s.etat=e.id;s.etatD=d;s.chk='';s.rappel=n;s.entries.unshift({d,type:'et',dose:'',txt:e.l+(n?` (rappel tous les ${n} j)`:''),ok:false});set(z,c,s);viewChai(z,c);};
+  q('fop').onsubmit=ev=>{ev.preventDefault();const o=q('op').value;if(!o)return;s.entries.unshift({d:q('opD').value||today,type:'op',dose:'',txt:o,ok:false});set(z,c,s);viewChai(z,c);};
+  const calc2=()=>{const v=+q('so2d').value;const V=+q('vol').value||c.cap;q('calc2').textContent=v?`= ${fmtQ(v*V/100,'g')} pour ${fmt(V)} L, total après ajout ${fmtQ(so2+v*V/100,'g')}`:'';};
+  q('so2d').oninput=calc2;
+  q('fso2').onsubmit=ev=>{ev.preventDefault();const v=+q('so2d').value;if(!v)return;const dose=`${v} g/hL`;s.entries.unshift({d:q('so2D').value||today,type:'pr',dose,txt:'SO₂ '+dose,ok:false,tot:totalDose(dose,s.vol)||undefined});set(z,c,s);viewChai(z,c);};
+  const calc=()=>{const t=totalDose(q('txt').value,+q('vol').value||c.cap);q('calc').textContent=t?`= ${fmtQ(t.n,t.u)} pour ${fmt(+q('vol').value||c.cap)} L${q('vol').value?'':' (capacité, volume non saisi)'}`:'';};
+  q('txt').oninput=calc;
+  q('add').onsubmit=ev=>{ev.preventDefault();const txt=q('txt').value.trim();const t=q('temp').value;if(!txt&&!t)return;const d=q('d').value||today;
+    if(t){s.temp=t;s.entries.unshift({d,type:'tp',dose:'',txt:t+' °C',ok:false});}
+    if(txt){const p=parseDose(txt);const dose=p?`${p.q} ${p.u}/${p.per==='hl'?'hL':'L'}`:'';const type=(dose||isSO2({txt,dose:''}))?'pr':'op';s.entries.unshift({d,type,dose,txt,ok:false,tot:totalDose(txt,s.vol)||undefined});}
+    set(z,c,s);viewChai(z,c);};
+  q('tr').onsubmit=ev=>{ev.preventDefault();const o=others[+q('dest').value];const n=+q('qty').value||0;if(n<=0)return;const ds=get(o.oz,o.oc);
+    if(ds.vol+n>o.oc.cap&&!window.confirm(`Dépasse la capacité de ${esc(o.oc.n)} (${fmt(o.oc.cap)} L). Continuer ?`))return;
+    s.vol=Math.max(0,(+s.vol||0)-n);if(!ds.vol){ds.vin=s.vin;ds.col=s.col;}ds.vol=(+ds.vol||0)+n;
+    const lbl=(zz,cc)=>(zz.id==='meb'?'MEB':'Chai '+zz.id)+' '+cc.n;
+    s.entries.unshift({d:today,type:'tr',dose:'',txt:`${fmt(n)} L vers ${lbl(o.oz,o.oc)}`,ok:false});ds.entries.unshift({d:today,type:'tr',dose:'',txt:`${fmt(n)} L reçus de ${lbl(z,c)}${s.vin?' ('+s.vin+')':''}`,ok:false});
+    state.cuves[key(o.oz,o.oc)]=ds;set(z,c,s);viewChai(z,c);};
+  sheet.querySelectorAll('[data-ok]').forEach(i=>i.onchange=()=>{s.entries[+i.dataset.ok].ok=i.checked;set(z,c,s);viewChai(z,c);});
+  sheet.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{s.entries.splice(+b.dataset.del,1);set(z,c,s);viewChai(z,c);});
+  // dictee (Chrome Android, Safari iOS)
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR){const m=q('mic');m.hidden=false;let r=null;m.onclick=()=>{if(r){r.stop();return;}r=new SR();r.lang='fr-FR';r.interimResults=false;m.classList.add('rec');m.textContent='● Parle';
+    r.onresult=e=>{q('txt').value=(q('txt').value+' '+e.results[0][0].transcript).trim();};r.onend=()=>{r=null;m.classList.remove('rec');m.textContent='🎙 Dicter';};r.onerror=r.onend;r.start();};}
+}
+
+// ---------- Export et sauvegardes ----------
+function exportCSV(){const rows=[['Zone','Cuve','Capacité L','Volume L','Contenu','Couleur','Date','Type','Dose','Total','Note','Fait']];
+  for(const z of ZONES)for(const c of z.cuves){const s=get(z,c);if(!s.vol&&!s.entries.length)continue;const base=[z.nom,c.n,c.cap,s.vol||0,s.vin,s.col];
+    if(!s.entries.length)rows.push([...base,'','','','','','']);for(const e of s.entries)rows.push([...base,e.d,({op:'opération',pr:'produit',td:'à faire',tr:'transfert',et:'état',tp:'température'}[e.type]||e.type),e.dose||'',e.tot?fmtQ(e.tot.n,e.tot.u):'',e.txt,e.type==='td'?(e.ok?'oui':'non'):'']);}
+  const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='carnet-chai-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();}
+async function listBackups(){const el=$('bakl');el.innerHTML='<p class="sub">Chargement…</p>';try{const l=await api('GET','/api/backups');
+  el.innerHTML=`<p class="sub">Copie automatique chaque nuit à 3 h, 30 jours gardés. Restaurer remplace tout par l'état de ce jour-là.</p><ul class="jour">${l.map(k=>`<li><span class="t">${k.slice(4)}</span><button class="hb" data-r="${k}">Restaurer</button></li>`).join('')||'<li><span class="t" style="color:var(--mu)">Aucune copie encore (la première se fait cette nuit).</span></li>'}</ul>`;
+  el.querySelectorAll('[data-r]').forEach(b=>b.onclick=async()=>{if(!window.confirm('Remplacer toutes les données par la copie du '+b.dataset.r.slice(4)+' ?'))return;const s=await api('GET','/api/backups/'+b.dataset.r);state=s;state.ts=Date.now();store();push();viewPlan();});}
+  catch(e){el.innerHTML='<p class="sub">Sauvegardes indisponibles hors ligne.</p>';}}
+
+if(!pin)askPin();else{route();pull();}
+if("serviceWorker" in navigator)navigator.serviceWorker.register("/sw.js").catch(()=>{});
+</script>
+</body>
+</html>

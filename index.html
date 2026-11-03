@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carnet de chai</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#23262a;--bg2:#2c3035;--line:#3a3f45;--tx:#ece8df;--mu:#9a9f9a;--inox:#c7ccd1;--inox2:#8f979e;--vin:#7b1e3b;--vin2:#a8294f;--oak:#a06c3b;--oak2:#d19a5c;--chalk:#fff8e7;--todo:#e8b43a}
+  *{box-sizing:border-box}
+  html{background:var(--bg)}
+  body{margin:0;font:15px/1.45 Barlow,-apple-system,sans-serif;color:var(--tx);background:var(--bg)}
+  h1,h2,h4,.zone b,.cuve b,.btn,.mini a,.lab,.tag{font-family:'Barlow Condensed',Barlow,sans-serif}
+  header{padding:10px 16px;border-bottom:1px solid var(--line);background:var(--bg2);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+  header h1{font-size:24px;font-weight:600;margin:0;flex:1;letter-spacing:.01em}
+  header small{color:var(--mu);font-size:13px}
+  button{font:inherit;cursor:pointer;color:inherit}
+  .back{background:none;border:1px solid var(--inox2);border-radius:6px;padding:5px 10px;color:var(--inox)}
+  main{padding:18px 16px 60px;max-width:980px;margin:0 auto}
+  .sub{color:var(--mu);margin:0 0 16px;max-width:60ch}
+  /* plan general : les batiments */
+  .plan{display:flex;gap:10px;flex-wrap:wrap}
+  .zone{flex:1 1 130px;background:var(--bg2);border:1px solid var(--line);border-top:5px solid var(--inox2);border-radius:4px;padding:12px 10px 10px;text-decoration:none;color:var(--tx);min-height:110px;transition:border-color .15s}
+  .zone:hover,.zone:focus-visible{border-color:var(--inox);outline:none}
+  .zone.b{border-top-color:var(--oak2)}
+  .zone.meb{border-top-color:var(--vin2);flex:0 0 100%;max-width:360px;margin:12px auto 0}
+  .zone b{display:block;font-size:22px;font-weight:600;line-height:1.1;margin-bottom:4px}
+  .zone span{display:block;font-size:13px;color:var(--mu)}
+  .zone i{display:block;font-size:14px;margin-top:8px;font-style:normal;color:var(--tx)}
+  .zone i b{display:inline;font:inherit;color:var(--todo)}
+  .couloir{border-top:1px dashed var(--inox2);border-bottom:1px dashed var(--inox2);color:var(--mu);text-align:center;padding:8px;margin:12px 0 0;font-size:13px}
+  /* vue d'un chai */
+  .chai{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:14px;position:relative}
+  .cols{display:flex;gap:14px}
+  .col{flex:1;display:flex;flex-direction:column;gap:9px}
+  .col h4{margin:0 0 2px;font-size:15px;color:var(--mu);font-weight:500;text-align:center}
+  .lab{text-align:center;color:var(--mu);font-size:14px;margin-bottom:8px}
+  .cuve{position:relative;border:0;background:none;padding:0;width:100%;display:flex;align-items:stretch;gap:8px;text-align:left;border-radius:6px}
+  .cuve:focus-visible{outline:2px solid var(--chalk);outline-offset:3px}
+  .tank{flex:0 0 34px;height:46px;border-radius:6px 6px 3px 3px;background:linear-gradient(90deg,var(--inox2),var(--inox) 45%,var(--inox2));position:relative;overflow:hidden;box-shadow:inset 0 -2px 0 rgba(0,0,0,.35)}
+  .tank i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(90deg,var(--vin),var(--vin2) 50%,var(--vin));transition:height .3s}
+  .cuve.o .tank{border-radius:12px;background:linear-gradient(90deg,#6e4524,var(--oak) 40%,#6e4524);height:40px;align-self:center}
+  .cuve.o .tank i{background:rgba(0,0,0,.35)}
+  .cuve .inf{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--line);padding-bottom:2px}
+  .cuve b{font-size:18px;font-weight:600;line-height:1.1;color:var(--chalk)}
+  .cuve span{font-size:12px;color:var(--mu)}
+  .cuve .vin{display:block;font-size:13px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cuve .todo{position:absolute;top:4px;right:0;background:var(--todo);color:#1a1a1a;border-radius:9px;font-size:11px;padding:0 6px;font-weight:600;line-height:17px}
+  .cuve.sel .inf{border-bottom-color:var(--chalk)}
+  .mini{display:flex;gap:4px;justify-content:flex-end;margin-bottom:12px}
+  .mini a{border:1px solid var(--line);border-radius:4px;padding:2px 9px;font-size:14px;color:var(--mu);text-decoration:none}
+  .mini a.on{border-color:var(--inox);color:var(--chalk)}
+  /* fiche cuve */
+  .fiche{background:var(--bg2);border:1px solid var(--line);border-left:4px solid var(--vin2);border-radius:6px;padding:16px;margin-top:18px}
+  .fiche h2{margin:0;font-size:26px;font-weight:600}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+  .row label{display:flex;flex-direction:column;font-size:13px;color:var(--mu);flex:1 1 140px;gap:3px}
+  input,select,textarea{font:inherit;padding:8px 9px;border:1px solid var(--line);border-radius:5px;width:100%;background:var(--bg);color:var(--tx)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--inox)}
+  textarea{min-height:64px}
+  .btn{background:var(--chalk);color:#1a1a1a;border:0;border-radius:5px;padding:8px 16px;font-weight:600;font-size:17px}
+  .entries{list-style:none;padding:0;margin:14px 0 0}
+  .entries li{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line);align-items:flex-start}
+  .entries .d{color:var(--mu);font-size:13px;white-space:nowrap;width:80px;font-variant-numeric:tabular-nums}
+  .entries .t{flex:1}
+  .entries .tag{font-size:13px;padding:0 6px;border-radius:3px;margin-right:6px;font-weight:600}
+  .tag.op{background:#3b4c66;color:#dbe6f7}.tag.pr{background:#5a4020;color:var(--oak2)}.tag.td{background:var(--todo);color:#1a1a1a}.tag.td.ok{background:var(--line);color:var(--mu);text-decoration:line-through}
+  .entries .x{background:none;border:0;color:var(--mu);font-size:18px;line-height:1}
+  .entries input[type=checkbox]{width:20px;height:20px;accent-color:var(--todo)}
+  .saving{position:fixed;bottom:12px;right:12px;background:var(--chalk);color:#1a1a1a;padding:6px 12px;border-radius:5px;font-size:13px;display:none}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media(max-width:600px){.cols{gap:8px}.cuve b{font-size:16px}.tank{flex-basis:26px;height:40px}}
+</style>
+</head>
+<body>
+<header><button class="back" id="back" hidden>← Plan</button><h1 id="title">Plan général du chai</h1><small id="saved"></small></header>
+<main id="main"></main>
+<div class="saving" id="saving">Enregistrement…</div>
+
+<script id="state" type="application/json">{}</script>
+<script>
+// ---------- Inventaire fixe (d'apres plan_general_chai.pdf) ----------
+const L=(n,cap,side)=>({n,cap,side});
+const ZONES=[
+ {id:'5',nom:'Chai 5 · barriques',cls:'b',desc:'88 barriques · 28 600 L · extrémité gauche',col:'o',
+  cuves:[L('Mur fond G · 1×500',500,'l'),L('Mur fond · 4×225 (A)',900,'l'),L('Mur fond · 4×225 (B)',900,'r'),L('Mur fond D · 1×500',500,'r'),
+   L('Mur G · 6×225 (1)',1350,'l'),L('Mur G · 6×225 (2)',1350,'l'),L('Mur G · 6×225 (3)',1350,'l'),L('Mur G · 4×225',900,'l'),L('Mur G · 1×500 (a)',500,'l'),L('Mur G · 1×500 (b)',500,'l'),L('Mur G · 5×500',2500,'l'),L('Entrée G · 3×500',1500,'l'),
+   L('Rangée G · 6×500',3000,'c'),L('Rangée D · 6×500',3000,'c'),
+   L('Mur D · 6×225 (1)',1350,'r'),L('Mur D · 6×225 (2)',1350,'r'),L('Mur D · 6×225 (3)',1350,'r'),L('Mur D · 4×225',900,'r'),L('Mur D · 1×500 (a)',500,'r'),L('Mur D · 1×500 (b)',500,'r'),L('Mur D · 6×500',3000,'r'),L('Entrée D · 4×225',900,'r')]},
+ {id:'4',nom:'Chai 4',desc:'24 cuves · 141 600 L',
+  cuves:[...Array.from({length:12},(_,i)=>L('C'+(i+1),7150,'l')),L('C13',7150,'r'),L('Pile 1',1150,'r'),L('Pile 2',1150,'r'),L('Pile 3',1150,'r'),L('Pile 4',1150,'r'),L('Pile 5',1150,'r'),...Array.from({length:6},(_,i)=>L('C'+(i+14),7150,'r'))]},
+ {id:'3',nom:'Chai 3',desc:'12 cuves · 69 250 L',
+  cuves:[...Array.from({length:5},(_,i)=>L('C'+(i+1),5750,'l')),...Array.from({length:4},(_,i)=>L('C'+(i+6),7550,'r')),L('C10',2700,'r'),L('C11',2700,'r'),L('C12',4900,'r')]},
+ {id:'2',nom:'Chai 2',desc:'10 cuves · 110 000 L',
+  cuves:[...Array.from({length:4},(_,i)=>L('C'+(i+1),20000,'l')),...Array.from({length:6},(_,i)=>L('C'+(i+5),5000,'r'))]},
+ {id:'1',nom:'Chai 1',desc:'10 cuves · 140 000 L',
+  cuves:[...Array.from({length:6},(_,i)=>L('C'+(i+1),10000,'l')),...Array.from({length:4},(_,i)=>L('C'+(i+7),20000,'r'))]},
+ {id:'0',nom:'Chai 0',desc:'12 cuves de 25 505 L · 306 060 L · extrémité droite',
+  cuves:[...Array.from({length:6},(_,i)=>L('C'+(i+1),25505,'l')),...Array.from({length:6},(_,i)=>L('C'+(i+7),25505,'r'))]},
+ {id:'meb',nom:'Mise en bouteille',cls:'meb',desc:'17 cuves · 31 382 L · en face des chais',
+  cuves:[L('Pass. G 2 500 (dessus a)',2500,'l'),L('Pass. G 2 500 (dessus b)',2500,'l'),L('Pass. G 1 998 (dessous a)',1998,'l'),L('Pass. G 1 998 (dessous b)',1998,'l'),L('3 300 L',3300,'l'),L('4 400 L (a)',4400,'l'),L('4 400 L (b)',4400,'l'),
+   L('Pass. D 1 166',1166,'r'),L('Pass. D 1 599',1599,'r'),L('Pass. D 1 563',1563,'r'),L('Pass. D 1 158',1158,'r'),L('900 L (a)',900,'r'),L('900 L (b)',900,'r'),L('900 L (c)',900,'r'),L('700 L (a)',700,'r'),L('700 L (b)',700,'r'),L('700 L (c)',700,'r')]}
+];
+const fmt=n=>n.toLocaleString('fr-CH').replace(/ |,/g,' ');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ---------- Etat (sauvegarde dans la page elle-meme) ----------
+const TEMPLATE='<!DOCTYPE html>\n'+document.documentElement.outerHTML; // capture avant tout rendu
+let state=JSON.parse(document.getElementById('state').textContent||'{}');
+state.cuves=state.cuves||{};
+let api=null; // capability artifact
+try{const ls=localStorage.getItem('chai-state');if(ls&&!Object.keys(state.cuves).length)state=JSON.parse(ls);}catch(e){}
+if(window.claude&&claude.use)claude.use('artifact').then(a=>{api=a;document.getElementById('saved').textContent=a?'partagé':'local';});
+let timer=null;
+function save(){
+  try{localStorage.setItem('chai-state',JSON.stringify(state));}catch(e){}
+  clearTimeout(timer);timer=setTimeout(publish,1500); // regroupe les modifs rapides
+}
+async function publish(){
+  if(!api)return;
+  document.getElementById('saving').style.display='block';
+  const json=JSON.stringify(state).replace(/<\//g,'<\\/');
+  const html=TEMPLATE.replace(/(<script id="state" type="application\/json">)[\s\S]*?(<\/script>)/,'$1'+json+'$2');
+  try{await api.publish(html);}catch(e){document.getElementById('saved').textContent='non enregistré ('+(e.code||e.message)+')';}
+  document.getElementById('saving').style.display='none';
+}
+const key=(z,c)=>z.id+'|'+c.n;
+const get=(z,c)=>state.cuves[key(z,c)]||{vol:0,vin:'',entries:[]};
+const set=(z,c,v)=>{state.cuves[key(z,c)]=v;save();};
+
+// ---------- Vues ----------
+const main=document.getElementById('main'),title=document.getElementById('title'),back=document.getElementById('back');
+let cur=null;
+function route(){const h=location.hash.replace('#','');const z=ZONES.find(z=>'z-'+z.id===h);z?viewChai(z):viewPlan();window.scrollTo(0,0);}
+addEventListener('hashchange',route);
+back.onclick=()=>{location.hash='';};
+
+function viewPlan(){
+  cur=null;back.hidden=true;title.textContent='Plan général du chai';
+  const nb=z=>z.cuves.reduce((a,c)=>a+get(z,c).entries.filter(e=>e.type==='td'&&!e.ok).length,0);
+  const vol=z=>z.cuves.reduce((a,c)=>a+(+get(z,c).vol||0),0);
+  const cap=z=>z.cuves.reduce((a,c)=>a+c.cap,0);
+  const box=z=>`<a class="zone ${z.cls||''}" href="#z-${z.id}"><b>${z.nom}</b><span>${z.cuves.length} ${z.id==='5'?'emplacements':'cuves'}</span><span>${fmt(cap(z))} L</span><i>${fmt(vol(z))} L en cuve${nb(z)?' · <b style="color:#d33;display:inline">'+nb(z)+' à faire</b>':''}</i></a>`;
+  main.innerHTML=`<p class="sub">Chais 5 à 0 de gauche à droite, couloir devant, mise en bouteille en face. Touche un chai pour l'ouvrir.</p>
+  <div class="plan">${ZONES.filter(z=>z.id!=='meb').map(box).join('')}</div>
+  <div class="couloir">Couloir le long de tous les chais</div>
+  <div class="plan">${box(ZONES.find(z=>z.id==='meb'))}</div>`;
+}
+function viewChai(z,sel){
+  cur=z;back.hidden=false;title.textContent=z.nom;
+  const nav=ZONES.map(o=>`<a href="#z-${o.id}" class="${o===z?'on':''}">${o.id==='meb'?'MEB':o.id}</a>`).join('');
+  const tile=c=>{const s=get(z,c);const td=s.entries.filter(e=>e.type==='td'&&!e.ok).length;const cls=c.side==='c'||z.id==='5'?'o':'';
+    return `<button class="cuve ${cls}${sel===c?' sel':''}" data-n="${esc(c.n)}"><span class="tank"><i style="height:${Math.min(100,100*(+s.vol||0)/c.cap)}%"></i></span><span class="inf"><b>${esc(c.n)}</b>${s.vin?`<span class="vin">${esc(s.vin)}</span>`:''}<span>${s.vol?fmt(s.vol)+' / ':''}${fmt(c.cap)} L</span></span>${td?`<span class="todo">${td}</span>`:''}</button>`;};
+  const col=(side,h)=>`<div class="col"><h4>${h}</h4>${z.cuves.filter(c=>c.side===side).map(tile).join('')}</div>`;
+  main.innerHTML=`<div class="mini">${nav}</div><p class="sub">${z.desc}. Touche une cuve pour voir son journal.</p>
+  <div class="chai"><div class="lab">Mur du fond</div><div class="cols">${col('l','Côté gauche')}${z.id==='5'?col('c','Centre'):''}${col('r','Côté droit')}</div><div class="lab" style="margin:10px 0 0">↑ Entrée</div></div>
+  <div id="fiche"></div>`;
+  main.querySelectorAll('.cuve').forEach(b=>b.onclick=()=>viewCuve(z,z.cuves.find(c=>c.n===b.dataset.n)));
+  if(sel)viewCuve(z,sel);
+}
+function viewCuve(z,c){
+  const s=get(z,c);const today=new Date().toISOString().slice(0,10);
+  const li=(e,i)=>`<li><span class="d">${esc(e.d)}</span><span class="t"><span class="tag ${e.type}${e.ok?' ok':''}">${{op:'Opération',pr:'Produit',td:'À faire'}[e.type]}</span>${esc(e.txt)}${e.dose?` <b>${esc(e.dose)}</b>`:''}</span>${e.type==='td'?`<input type="checkbox" ${e.ok?'checked':''} data-ok="${i}">`:''}<button class="x" data-del="${i}" title="Supprimer">×</button></li>`;
+  const f=document.getElementById('fiche');
+  f.innerHTML=`<div class="fiche"><h2>${z.nom} · ${esc(c.n)}</h2><div class="sub">Capacité ${fmt(c.cap)} L</div>
+  <div class="row"><label>Volume actuel (L)<input id="vol" type="number" inputmode="numeric" value="${s.vol||''}"></label><label>Contenu (vin, lot, cépage)<input id="vin" value="${esc(s.vin)}"></label></div>
+  <form id="add"><div class="row"><label>Date<input id="d" type="date" value="${today}"></label><label>Type<select id="type"><option value="op">Opération faite</option><option value="pr">Produit / dose (SO₂…)</option><option value="td">À faire</option></select></label><label>Dose (ex. 5 g/hL, 2 L)<input id="dose"></label></div>
+  <div class="row"><label>Note<textarea id="txt" placeholder="Soutirage, remontage, 4 g/hL SO₂…"></textarea></label></div>
+  <button class="btn">Ajouter</button></form>
+  <ul class="entries">${s.entries.map(li).join('')||'<li><span class="t" style="color:var(--m)">Rien noté. Ajoute la première opération ci-dessus.</span></li>'}</ul></div>`;
+  f.scrollIntoView({behavior:'smooth',block:'start'});
+  const upd=()=>{s.vol=+f.querySelector('#vol').value||0;s.vin=f.querySelector('#vin').value.trim();set(z,c,s);};
+  f.querySelector('#vol').onchange=f.querySelector('#vin').onchange=()=>{upd();viewChai(z,c);};
+  f.querySelector('#add').onsubmit=ev=>{ev.preventDefault();const txt=f.querySelector('#txt').value.trim();if(!txt)return;
+    s.entries.unshift({d:f.querySelector('#d').value||today,type:f.querySelector('#type').value,dose:f.querySelector('#dose').value.trim(),txt,ok:false});set(z,c,s);viewChai(z,c);};
+  f.querySelectorAll('[data-ok]').forEach(i=>i.onchange=()=>{s.entries[+i.dataset.ok].ok=i.checked;set(z,c,s);viewChai(z,c);});
+  f.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{s.entries.splice(+b.dataset.del,1);set(z,c,s);viewChai(z,c);});
+}
+route();
+</script>
+</body>
+</html>
